@@ -4,5 +4,5 @@ import com.amaro.todolist.domain.entities.TodoDomain
 import io.reactivex.Single
 
 interface TodoRepository {
-    fun getAllTodos() : Single<TodoDomain>
+    fun getAllTodos() : Single<List<TodoDomain>>
 }
