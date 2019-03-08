@@ -1,6 +1,7 @@
 package com.amaro.todolist.domain.executor
 
 import com.amaro.todolist.domain.usercases.UseCase
+import com.amaro.todolist.presentation.model.TodoModel
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.DisposableSingleObserver
 import org.jetbrains.annotations.NotNull
@@ -13,7 +14,7 @@ class ObservableUseCaseImpl<P, R>(@NotNull var useCase: UseCase<P, R>) : Observa
 
     val disposables = CompositeDisposable()
 
-    override fun execute(observer: DisposableSingleObserver<Any>, params: P) {
+    override fun execute(observer: DisposableSingleObserver<List<TodoModel>>, params: P) {
 
         val single = useCase.execute(params)
             .subscribeOn(Schedulers.io())
