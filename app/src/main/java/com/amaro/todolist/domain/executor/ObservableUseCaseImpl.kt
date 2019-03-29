@@ -8,18 +8,19 @@ import org.jetbrains.annotations.NotNull
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
+import io.reactivex.functions.Consumer
 
 
 class ObservableUseCaseImpl<P, R>(@NotNull var useCase: UseCase<P, R>) : ObservableUseCase<P, R> {
 
     val disposables = CompositeDisposable()
 
-    override fun execute(observer: DisposableSingleObserver<List<TodoModel>>, params: P) {
+    override fun execute(observer: DisposableSingleObserver<R>, params: P) {
 
-        val single = useCase.execute(params)
+        addDisposable(useCase.execute(params)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-        addDisposable(single.subscribeWith(observer))
+            .subscribeWith(observer))
     }
 
     override fun dispose() {
