@@ -13,6 +13,9 @@ class ListTodosViewModel(var listAllTodos : ObservableUseCase<Unit, List<TodoDom
                          var response : MutableLiveData<Response>,
                          val mapper: Mapper<TodoDomain, TodoModel>) : ViewModel() {
 
+    init {
+        loadData()
+    }
 
     override fun onCleared() {
         listAllTodos.dispose()
