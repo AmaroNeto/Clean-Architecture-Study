@@ -4,11 +4,13 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.Room
 import com.amaro.todolist.R
 import com.amaro.todolist.data.local.AppDataBase
 import com.amaro.todolist.data.local.dao.TodoDao
 import com.amaro.todolist.data.local.entities.TodoLocalEntity
+import com.amaro.todolist.data.local.repository.FakeTodoLocalRepository
 import com.amaro.todolist.data.local.repository.TodoLocalRepository
 import com.amaro.todolist.data.mapper.TodoLocalMapper
 import com.amaro.todolist.domain.entities.TodoDomain
@@ -20,6 +22,7 @@ import com.amaro.todolist.presentation.viewmodel.ViewModelFactory
 import com.amaro.todolist.presentation.mapper.Mapper
 import com.amaro.todolist.presentation.mapper.TodoModelMapper
 import com.amaro.todolist.presentation.model.TodoModel
+import kotlinx.android.synthetic.main.list_todo_activity.*
 
 
 class ListTodoActivity : AppCompatActivity() {
@@ -38,9 +41,14 @@ class ListTodoActivity : AppCompatActivity() {
             mapperRepository
         )
 
+        //Fake data ------------
+        val fakeTodoRepository : FakeTodoLocalRepository = FakeTodoLocalRepository(
+            mapperRepository
+        )
+
         val response : MutableLiveData<Response> = MutableLiveData<Response>()
         val mapper : TodoModelMapper = TodoModelMapper()
-        val observableUserCase : ObservableUseCaseImpl<Unit,List<TodoDomain>> = ObservableUseCaseImpl(ListTodosUserCase(todoRepository))
+        val observableUserCase : ObservableUseCaseImpl<Unit,List<TodoDomain>> = ObservableUseCaseImpl(ListTodosUserCase(fakeTodoRepository))
 
         ViewModelProviders.of(this, ViewModelFactory<ListTodosViewModel>{ ListTodosViewModel(
                 observableUserCase,response, mapper)
@@ -51,5 +59,17 @@ class ListTodoActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.list_todo_activity)
 
+        setRecyclerView()
     }
+
+    private fun setRecyclerView() {
+        todo_list_recyclerview.layoutManager =  LinearLayoutManager(this);
+        todo_list_recyclerview.setHasFixedSize(true)
+    }
+
+    private fun processResponse(response: Response) {
+        //TODO : https://proandroiddev.com/mvvm-architecture-using-livedata-rxjava-and-new-dagger-android-injection-639837b1eb6c
+    }
+
+
 }
