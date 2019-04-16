@@ -1,6 +1,7 @@
 package com.amaro.todolist.presentation.view.adapter
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +11,8 @@ import com.amaro.todolist.presentation.model.TodoModel
 import kotlinx.android.synthetic.main.todo_list_item.view.*
 
 class TodoListAdapter(val context : Context,
-                      val todoList : List<TodoModel>) : RecyclerView.Adapter<TodoListAdapter.TodoViewHolder>(){
+                      val todoList : List<TodoModel>,
+                      val callback: TodoListAdapterCallback) : RecyclerView.Adapter<TodoListAdapter.TodoViewHolder>(){
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodoViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.todo_list_item, parent, false)
@@ -23,16 +25,23 @@ class TodoListAdapter(val context : Context,
 
     override fun onBindViewHolder(holder: TodoViewHolder, position: Int) {
         val todo : TodoModel = todoList.get(position)
-        holder.bindView(todo);
+        holder.bindView(todo, callback);
+    }
+
+    interface TodoListAdapterCallback {
+        fun onItemClicked(todoModel : TodoModel)
     }
 
     class TodoViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView) {
 
-        fun bindView(todoModel: TodoModel) {
+        fun bindView(todoModel: TodoModel, callback: TodoListAdapterCallback) {
+
             val title = itemView.title
 
             title.text =  todoModel.title
+            itemView.setOnClickListener {
+                callback.onItemClicked(todoModel)
+            }
         }
-
     }
 }

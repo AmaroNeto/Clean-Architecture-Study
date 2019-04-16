@@ -1,5 +1,6 @@
 package com.amaro.todolist.presentation.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.amaro.todolist.domain.entities.TodoDomain
@@ -7,6 +8,7 @@ import com.amaro.todolist.domain.executor.ObservableUseCase
 import com.amaro.todolist.presentation.mapper.Mapper
 import com.amaro.todolist.presentation.model.TodoModel
 import com.amaro.todolist.presentation.view.Response
+import com.amaro.todolist.presentation.view.adapter.TodoListAdapter
 import io.reactivex.observers.DisposableSingleObserver
 
 class ListTodosViewModel(var listAllTodos : ObservableUseCase<Unit, List<TodoDomain>>,
@@ -33,10 +35,9 @@ class ListTodosViewModel(var listAllTodos : ObservableUseCase<Unit, List<TodoDom
             }
 
             override fun onSuccess(t: List<TodoDomain>) {
-                t.map { todo ->
+                response.value = Response.success(t.map { todo ->
                     mapper.mapFromDomain(todo)
-                }
-                response.value = Response.success(t)
+                })
             }
 
             override fun onError(e: Throwable) {

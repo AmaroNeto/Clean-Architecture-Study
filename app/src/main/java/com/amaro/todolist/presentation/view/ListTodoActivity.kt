@@ -1,8 +1,11 @@
 package com.amaro.todolist.presentation.view
 
 import android.os.Bundle
+import android.util.Log
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.Room
@@ -22,10 +25,11 @@ import com.amaro.todolist.presentation.viewmodel.ViewModelFactory
 import com.amaro.todolist.presentation.mapper.Mapper
 import com.amaro.todolist.presentation.mapper.TodoModelMapper
 import com.amaro.todolist.presentation.model.TodoModel
+import com.amaro.todolist.presentation.view.adapter.TodoListAdapter
 import kotlinx.android.synthetic.main.list_todo_activity.*
 
 
-class ListTodoActivity : AppCompatActivity() {
+class ListTodoActivity : AppCompatActivity(), TodoListAdapter.TodoListAdapterCallback {
 
     val vm : ListTodosViewModel by lazy {
 
@@ -47,7 +51,7 @@ class ListTodoActivity : AppCompatActivity() {
         )
 
         val response : MutableLiveData<Response> = MutableLiveData<Response>()
-        val mapper : TodoModelMapper = TodoModelMapper()
+        val mapper = TodoModelMapper()
         val observableUserCase : ObservableUseCaseImpl<Unit,List<TodoDomain>> = ObservableUseCaseImpl(ListTodosUserCase(fakeTodoRepository))
 
         ViewModelProviders.of(this, ViewModelFactory<ListTodosViewModel>{ ListTodosViewModel(
@@ -60,16 +64,43 @@ class ListTodoActivity : AppCompatActivity() {
         setContentView(R.layout.list_todo_activity)
 
         setRecyclerView()
+
+        vm.response.observe(this, Observer { response -> processResponse(response) })
     }
 
     private fun setRecyclerView() {
-        todo_list_recyclerview.layoutManager =  LinearLayoutManager(this);
-        todo_list_recyclerview.setHasFixedSize(true)
+        todoListRecyclerview.layoutManager =  LinearLayoutManager(this);
+        todoListRecyclerview.setHasFixedSize(true)
     }
 
     private fun processResponse(response: Response) {
-        //TODO : https://proandroiddev.com/mvvm-architecture-using-livedata-rxjava-and-new-dagger-android-injection-639837b1eb6c
+        Log.d("TEST","RESULT "+response.status)
+        when(response.status) {
+            Status.LOADING -> showLoading()
+            Status.SUCCESS -> {
+                renderResponse(response)
+                hideLoading()
+            }
+        }
+        //https://proandroiddev.com/mvvm-architecture-using-livedata-rxjava-and-new-dagger-android-injection-639837b1eb6c
+    }
+    override fun onItemClicked(todoModel: TodoModel) {
+        Log.d("Test", "ITEM: "+todoModel.title)
     }
 
+    private fun renderResponse(response: Response) {
+        val list : List<TodoModel> = response.data as List<TodoModel>
+        var adapter : TodoListAdapter = TodoListAdapter(this, list, this)
+        todoListRecyclerview.adapter = adapter
+    }
 
+    private fun showLoading() {
+        progressBar.visibility = View.VISIBLE
+        todoListRecyclerview.visibility = View.INVISIBLE;
+    }
+
+    private fun hideLoading() {
+        progressBar.visibility = View.GONE
+        todoListRecyclerview.visibility = View.VISIBLE;
+    }
 }
