@@ -3,6 +3,6 @@
           android:id="@+id/todo_detail_fragment"
           android:layout_width="match_parent"
           android:layout_height="match_parent"
-          android:name="com.amaro.todolist.presentation.view.TodoDetailFragment">
+          class="com.amaro.todolist.presentation.view.fragment.TodoDetailFragment">
 
 </fragment>

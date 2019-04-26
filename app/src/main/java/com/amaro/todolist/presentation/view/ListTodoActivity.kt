@@ -1,106 +1,63 @@
 package com.amaro.todolist.presentation.view
 
+import android.content.Intent
 import android.os.Bundle
-import android.util.Log
-import android.view.View
+import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.room.Room
 import com.amaro.todolist.R
-import com.amaro.todolist.data.local.AppDataBase
-import com.amaro.todolist.data.local.dao.TodoDao
-import com.amaro.todolist.data.local.entities.TodoLocalEntity
-import com.amaro.todolist.data.local.repository.FakeTodoLocalRepository
-import com.amaro.todolist.data.local.repository.TodoLocalRepository
-import com.amaro.todolist.data.mapper.TodoLocalMapper
-import com.amaro.todolist.domain.entities.TodoDomain
-import com.amaro.todolist.domain.executor.ObservableUseCaseImpl
-import com.amaro.todolist.domain.repositories.TodoRepository
-import com.amaro.todolist.domain.usercases.ListTodosUserCase
-import com.amaro.todolist.presentation.viewmodel.ListTodosViewModel
-import com.amaro.todolist.presentation.viewmodel.ViewModelFactory
-import com.amaro.todolist.presentation.mapper.Mapper
-import com.amaro.todolist.presentation.mapper.TodoModelMapper
+import com.amaro.todolist.logger.AppLog
 import com.amaro.todolist.presentation.model.TodoModel
-import com.amaro.todolist.presentation.view.adapter.TodoListAdapter
-import kotlinx.android.synthetic.main.list_todo_activity.*
+import com.amaro.todolist.presentation.view.fragment.TodoDetailFragment
+import com.amaro.todolist.presentation.view.fragment.TodoListFragment
 
 
-class ListTodoActivity : AppCompatActivity(), TodoListAdapter.TodoListAdapterCallback {
+class ListTodoActivity : AppCompatActivity(), TodoListFragment.OnItemClickListener {
 
-    val vm : ListTodosViewModel by lazy {
-
-        val db : AppDataBase = Room.databaseBuilder(
-            applicationContext,
-            AppDataBase::class.java, "todo-db"
-        ).build()
-        val todoDao : TodoDao = db.todoDao()
-
-        val mapperRepository: TodoLocalMapper = TodoLocalMapper()
-        val todoRepository : TodoLocalRepository = TodoLocalRepository(
-            todoDao,
-            mapperRepository
-        )
-
-        //Fake data ------------
-        val fakeTodoRepository : FakeTodoLocalRepository = FakeTodoLocalRepository(
-            mapperRepository
-        )
-
-        val response : MutableLiveData<Response> = MutableLiveData<Response>()
-        val mapper = TodoModelMapper()
-        val observableUserCase : ObservableUseCaseImpl<Unit,List<TodoDomain>> = ObservableUseCaseImpl(ListTodosUserCase(fakeTodoRepository))
-
-        ViewModelProviders.of(this, ViewModelFactory<ListTodosViewModel>{ ListTodosViewModel(
-                observableUserCase,response, mapper)
-        }).get(ListTodosViewModel::class.java)
-    }
+    val TAG = "ListTodoActivity"
+    //TODO inject dependency in Logger
+    val mLogger = AppLog()
+    var twoPane = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.list_todo_activity)
 
-        setRecyclerView()
+        if(isTwoPanel()) {
+            twoPane = true
+            mLogger.v(TAG, "isTwoPanel")
 
-        vm.response.observe(this, Observer { response -> processResponse(response) })
-    }
+            if(savedInstanceState == null) {
+                var fm = supportFragmentManager
+                var todoDetailFragment = TodoDetailFragment()
 
-    private fun setRecyclerView() {
-        todoListRecyclerview.layoutManager =  LinearLayoutManager(this);
-        todoListRecyclerview.setHasFixedSize(true)
-    }
-
-    private fun processResponse(response: Response) {
-        Log.d("TEST","RESULT "+response.status)
-        when(response.status) {
-            Status.LOADING -> showLoading()
-            Status.SUCCESS -> {
-                renderResponse(response)
-                hideLoading()
+                fm.beginTransaction()
+                    .add(R.id.todo_detail_fragment,todoDetailFragment)
+                    .commit()
+                mLogger.v(TAG, "added TodoDetailFragment")
             }
+        } else {
+            twoPane = false
         }
-        //https://proandroiddev.com/mvvm-architecture-using-livedata-rxjava-and-new-dagger-android-injection-639837b1eb6c
+
     }
+
+    fun isTwoPanel() : Boolean {
+        return findViewById<FrameLayout>(R.id.todo_detail_fragment) != null
+    }
+
     override fun onItemClicked(todoModel: TodoModel) {
-        Log.d("Test", "ITEM: "+todoModel.title)
+
+        mLogger.i(TAG, "item clicked: ${todoModel.title}")
+        if(twoPane) {
+            var todoDetailFragment = TodoDetailFragment.newInstance(todoModel)
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.todo_detail_fragment, todoDetailFragment)
+                .commit()
+        } else {
+            var intent = Intent(this, TodoDetailActivity::class.java)
+            intent.putExtra(TodoDetailActivity.EXTRA_TODO_MODEL, todoModel)
+            startActivity(intent)
+        }
     }
 
-    private fun renderResponse(response: Response) {
-        val list : List<TodoModel> = response.data as List<TodoModel>
-        var adapter : TodoListAdapter = TodoListAdapter(this, list, this)
-        todoListRecyclerview.adapter = adapter
-    }
-
-    private fun showLoading() {
-        progressBar.visibility = View.VISIBLE
-        todoListRecyclerview.visibility = View.INVISIBLE;
-    }
-
-    private fun hideLoading() {
-        progressBar.visibility = View.GONE
-        todoListRecyclerview.visibility = View.VISIBLE;
-    }
 }
