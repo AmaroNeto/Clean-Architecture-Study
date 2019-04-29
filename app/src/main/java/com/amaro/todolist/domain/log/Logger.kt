@@ -1,4 +1,4 @@
-package com.amaro.todolist.logger
+package com.amaro.todolist.domain.log
 
 interface Logger {
     fun d(tag : String, message : String )

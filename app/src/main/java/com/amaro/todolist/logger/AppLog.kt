@@ -2,10 +2,11 @@ package com.amaro.todolist.logger
 
 import android.util.Log
 import com.amaro.todolist.BuildConfig
+import com.amaro.todolist.domain.log.Logger
 
-class AppLog : Logger{
+class AppLog : Logger {
 
-    val TAG = "TodoList"
+    val TAG = "TLLog"
 
     override fun d(tag: String, message: String) {
         if (Log.isLoggable(TAG, Log.DEBUG) || BuildConfig.DEBUG) {

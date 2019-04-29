@@ -47,7 +47,7 @@ class ListTodoActivity : AppCompatActivity(), TodoListFragment.OnItemClickListen
 
     override fun onItemClicked(todoModel: TodoModel) {
 
-        mLogger.i(TAG, "item clicked: ${todoModel.title}")
+        mLogger.v(TAG, "item clicked: ${todoModel.title}")
         if(twoPane) {
             var todoDetailFragment = TodoDetailFragment.newInstance(todoModel)
             supportFragmentManager.beginTransaction()

@@ -36,6 +36,8 @@ class TodoListFragment : Fragment(), TodoListAdapter.TodoListAdapterCallback {
 
     val vm : ListTodosViewModel by lazy {
 
+        val log = AppLog();
+
         val db : AppDataBase = Room.databaseBuilder(
             activity!!.application,
             AppDataBase::class.java, "todo-db"
@@ -45,7 +47,8 @@ class TodoListFragment : Fragment(), TodoListAdapter.TodoListAdapterCallback {
         val mapperRepository: TodoLocalMapper = TodoLocalMapper()
         val todoRepository : TodoLocalRepository = TodoLocalRepository(
             todoDao,
-            mapperRepository
+            mapperRepository,
+            log
         )
 
         //Fake data ------------
@@ -55,7 +58,7 @@ class TodoListFragment : Fragment(), TodoListAdapter.TodoListAdapterCallback {
 
         val response : MutableLiveData<Response> = MutableLiveData<Response>()
         val mapper = TodoModelMapper()
-        val observableUserCase : ObservableUseCaseImpl<Unit, List<TodoDomain>> = ObservableUseCaseImpl(ListTodosUserCase(fakeTodoRepository))
+        val observableUserCase : ObservableUseCaseImpl<Unit, List<TodoDomain>> = ObservableUseCaseImpl(ListTodosUserCase(fakeTodoRepository,log))
 
         ViewModelProviders.of(this, ViewModelFactory<ListTodosViewModel>{ ListTodosViewModel(
             observableUserCase,response, mapper)
@@ -74,7 +77,7 @@ class TodoListFragment : Fragment(), TodoListAdapter.TodoListAdapterCallback {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        mLogger.i(TAG, "TodoListFragment attached")
+        mLogger.d(TAG, "TodoListFragment attached")
 
         try {
             mCallBack = context as OnItemClickListener
@@ -88,7 +91,7 @@ class TodoListFragment : Fragment(), TodoListAdapter.TodoListAdapterCallback {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        mLogger.i(TAG, "onCreateView")
+        mLogger.d(TAG, "onCreateView")
 
         val view = inflater.inflate(R.layout.todo_list_fragment, container, false)
         todoListRecyclerview = view.findViewById(R.id.todoListRecyclerview)
@@ -99,7 +102,7 @@ class TodoListFragment : Fragment(), TodoListAdapter.TodoListAdapterCallback {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        mLogger.i(TAG, "onActivityCreated")
+        mLogger.d(TAG, "onActivityCreated")
 
         setRecyclerView()
         vm.response.observe(viewLifecycleOwner, Observer { response -> processResponse(response) })
@@ -122,14 +125,14 @@ class TodoListFragment : Fragment(), TodoListAdapter.TodoListAdapterCallback {
         }
     }
     override fun onItemClicked(todoModel: TodoModel) {
-        mLogger.d(TAG,"onItemClicked: ${todoModel.id} - ${todoModel.title}")
+        mLogger.v(TAG,"onItemClicked: ${todoModel.id} - ${todoModel.title}")
         mCallBack.onItemClicked(todoModel)
     }
 
     private fun renderResponse(response: Response) {
-        mLogger.d(TAG, "renderResponse "+response.status)
+        mLogger.v(TAG, "renderResponse "+response.status)
         val list : List<TodoModel> = response.data as List<TodoModel>
-        var adapter = context?.let { TodoListAdapter(it, list, this) }
+        val adapter = context?.let { TodoListAdapter(it, list, this) }
         todoListRecyclerview.adapter = adapter
     }
 
