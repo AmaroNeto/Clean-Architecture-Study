@@ -24,7 +24,7 @@ class TodoDetailActivity : AppCompatActivity() {
 
         if(savedInstanceState == null) {
 
-            var todoModel = intent.getSerializableExtra(EXTRA_TODO_MODEL) as TodoModel
+            val todoModel = intent.getSerializableExtra(EXTRA_TODO_MODEL) as TodoModel
             todoModel?.let {
 
                 mLogger.i(TAG, "add todoDetailFragment : ${it.title}")

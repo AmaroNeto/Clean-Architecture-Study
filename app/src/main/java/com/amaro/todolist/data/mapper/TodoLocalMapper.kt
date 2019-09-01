@@ -3,7 +3,7 @@ package com.amaro.todolist.data.mapper
 import com.amaro.todolist.data.local.entities.TodoLocalEntity
 import com.amaro.todolist.domain.entities.TodoDomain
 
-class TodoLocalMapper : Mapper<TodoDomain, TodoLocalEntity> {
+class TodoLocalMapper: Mapper<TodoDomain, TodoLocalEntity> {
     override fun mapFromDomain(domainType: TodoDomain): TodoLocalEntity {
         var todoLocalEntity = TodoLocalEntity()
         todoLocalEntity.id = domainType.id

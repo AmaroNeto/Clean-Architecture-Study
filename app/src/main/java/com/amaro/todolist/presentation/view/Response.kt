@@ -2,7 +2,7 @@ package com.amaro.todolist.presentation.view
 
 import androidx.annotation.NonNull
 
-class Response(val status: Status, val data : Any = Any(), val error : Throwable = Throwable()) {
+class Response(val status: Status, val data : Any? = Any(), val error : Throwable = Throwable()) {
 
     //private constructor(var status: Status,val data : Any = Any(), error : Throwable = Throwable()) {}
 
@@ -11,7 +11,7 @@ class Response(val status: Status, val data : Any = Any(), val error : Throwable
             return Response(status = Status.LOADING);
         }
 
-        fun success(@NonNull data : Any) : Response {
+        fun success(data : Any?) : Response {
             return Response(Status.SUCCESS, data)
         }
 

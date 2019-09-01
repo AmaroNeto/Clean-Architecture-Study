@@ -2,70 +2,29 @@ package com.amaro.todolist.presentation.view.fragment
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.room.Room
 import com.amaro.todolist.R
-import com.amaro.todolist.data.local.AppDataBase
-import com.amaro.todolist.data.local.dao.TodoDao
-import com.amaro.todolist.data.local.repository.FakeTodoLocalRepository
-import com.amaro.todolist.data.local.repository.TodoLocalRepository
-import com.amaro.todolist.data.mapper.TodoLocalMapper
-import com.amaro.todolist.domain.entities.TodoDomain
-import com.amaro.todolist.domain.executor.ObservableUseCaseImpl
-import com.amaro.todolist.domain.usercases.ListTodosUserCase
-import com.amaro.todolist.logger.AppLog
-import com.amaro.todolist.presentation.mapper.TodoModelMapper
+import com.amaro.todolist.domain.log.Logger
 import com.amaro.todolist.presentation.model.TodoModel
 import com.amaro.todolist.presentation.view.Response
 import com.amaro.todolist.presentation.view.Status
 import com.amaro.todolist.presentation.view.adapter.TodoListAdapter
 import com.amaro.todolist.presentation.viewmodel.ListTodosViewModel
-import com.amaro.todolist.presentation.viewmodel.ViewModelFactory
+import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class TodoListFragment : Fragment(), TodoListAdapter.TodoListAdapterCallback {
 
-    val vm : ListTodosViewModel by lazy {
+    val vm : ListTodosViewModel by viewModel()
+    val mLogger: Logger by inject()
 
-        val log = AppLog();
-
-        val db : AppDataBase = Room.databaseBuilder(
-            activity!!.application,
-            AppDataBase::class.java, "todo-db"
-        ).build()
-        val todoDao : TodoDao = db.todoDao()
-
-        val mapperRepository: TodoLocalMapper = TodoLocalMapper()
-        val todoRepository : TodoLocalRepository = TodoLocalRepository(
-            todoDao,
-            mapperRepository,
-            log
-        )
-
-        //Fake data ------------
-        val fakeTodoRepository : FakeTodoLocalRepository = FakeTodoLocalRepository(
-            mapperRepository
-        )
-
-        val response : MutableLiveData<Response> = MutableLiveData<Response>()
-        val mapper = TodoModelMapper()
-        val observableUserCase : ObservableUseCaseImpl<Unit, List<TodoDomain>> = ObservableUseCaseImpl(ListTodosUserCase(fakeTodoRepository,log))
-
-        ViewModelProviders.of(this, ViewModelFactory<ListTodosViewModel>{ ListTodosViewModel(
-            observableUserCase,response, mapper)
-        }).get(ListTodosViewModel::class.java)
-    }
-
-    val mLogger = AppLog() //TODO inject dependency in Logger
     val TAG = "TodoListFragment"
     lateinit var todoListRecyclerview : RecyclerView
     lateinit var progressBar : ProgressBar

@@ -1,10 +1,9 @@
 package com.amaro.todolist.domain.executor
 
-import com.amaro.todolist.presentation.model.TodoModel
-import io.reactivex.observers.DisposableSingleObserver
+import io.reactivex.subscribers.DisposableSubscriber
 import org.jetbrains.annotations.NotNull
 
 interface ObservableUseCase<P, R> {
-    fun execute(@NotNull observer: DisposableSingleObserver<R>, params: P)
+    fun execute(@NotNull observer: DisposableSubscriber<R>, params: P)
     fun dispose()
 }

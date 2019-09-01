@@ -1,6 +1,5 @@
 package com.amaro.todolist.presentation.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.amaro.todolist.domain.entities.TodoDomain
@@ -8,8 +7,8 @@ import com.amaro.todolist.domain.executor.ObservableUseCase
 import com.amaro.todolist.presentation.mapper.Mapper
 import com.amaro.todolist.presentation.model.TodoModel
 import com.amaro.todolist.presentation.view.Response
-import com.amaro.todolist.presentation.view.adapter.TodoListAdapter
 import io.reactivex.observers.DisposableSingleObserver
+import io.reactivex.subscribers.DisposableSubscriber
 
 class ListTodosViewModel(var listAllTodos : ObservableUseCase<Unit, List<TodoDomain>>,
                          var response : MutableLiveData<Response>,
@@ -28,16 +27,17 @@ class ListTodosViewModel(var listAllTodos : ObservableUseCase<Unit, List<TodoDom
     }
 
     private fun loadData(){
-        listAllTodos.execute(object : DisposableSingleObserver<List<TodoDomain>>() {
+        listAllTodos.execute(object : DisposableSubscriber<List<TodoDomain>>() {
+            override fun onComplete() {
+            }
+
+            override fun onNext(t: List<TodoDomain>?) {
+                response.value = Response.success(t?.map { todo ->
+                    mapper.mapFromDomain(todo)
+                })            }
 
             override fun onStart() {
                 response.value = Response.loading()
-            }
-
-            override fun onSuccess(t: List<TodoDomain>) {
-                response.value = Response.success(t.map { todo ->
-                    mapper.mapFromDomain(todo)
-                })
             }
 
             override fun onError(e: Throwable) {

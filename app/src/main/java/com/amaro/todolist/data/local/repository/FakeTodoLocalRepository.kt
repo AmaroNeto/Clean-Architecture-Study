@@ -4,22 +4,20 @@ import com.amaro.todolist.data.local.entities.TodoLocalEntity
 import com.amaro.todolist.data.mapper.Mapper
 import com.amaro.todolist.domain.entities.TodoDomain
 import com.amaro.todolist.domain.repositories.TodoRepository
+import io.reactivex.Flowable
 import io.reactivex.Single
 
 class FakeTodoLocalRepository(val mapper: Mapper<TodoDomain, TodoLocalEntity>) : TodoRepository {
-    override fun getAllTodos(): Single<List<TodoDomain>> {
-        return createSingle().map {
+    override fun getAllTodos(): Flowable<List<TodoDomain>> {
+        return createFlowable().map {
             it.map { todo ->
                 mapper.mapToDomain(todo)
             }
         }
     }
 
-    private fun createSingle() : Single<List<TodoLocalEntity>> {
-        return Single.create { emitter ->
-            val list = getDemoTodoLocalEntity()
-            emitter.onSuccess(list)
-        }
+    private fun createFlowable() : Flowable<List<TodoLocalEntity>> {
+        return Flowable.just(getDemoTodoLocalEntity())
     }
 
     private fun getDemoTodoLocalEntity() : List<TodoLocalEntity> {
