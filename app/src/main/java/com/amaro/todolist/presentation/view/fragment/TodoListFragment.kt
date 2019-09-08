@@ -28,7 +28,7 @@ class TodoListFragment : Fragment(), TodoListAdapter.TodoListAdapterCallback {
     val TAG = "TodoListFragment"
     lateinit var todoListRecyclerview : RecyclerView
     lateinit var progressBar : ProgressBar
-    lateinit var mCallBack : OnItemClickListener;
+    lateinit var mCallBack : OnItemClickListener
 
     interface OnItemClickListener {
         fun onItemClicked(todoModel: TodoModel)
@@ -74,7 +74,7 @@ class TodoListFragment : Fragment(), TodoListAdapter.TodoListAdapterCallback {
     }
 
     private fun processResponse(response: Response) {
-        mLogger.d(TAG,"status result: ${response.status}")
+        mLogger.d(TAG,"response status: ${response.status}")
         when(response.status) {
             Status.LOADING -> showLoading()
             Status.SUCCESS -> {
@@ -89,8 +89,8 @@ class TodoListFragment : Fragment(), TodoListAdapter.TodoListAdapterCallback {
     }
 
     private fun renderResponse(response: Response) {
-        mLogger.v(TAG, "renderResponse "+response.status)
         val list : List<TodoModel> = response.data as List<TodoModel>
+        mLogger.v(TAG, "renderResponse list "+list.toString())
         val adapter = context?.let { TodoListAdapter(it, list, this) }
         todoListRecyclerview.adapter = adapter
     }

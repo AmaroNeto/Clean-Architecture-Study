@@ -23,7 +23,7 @@ class FakeTodoLocalRepository(val mapper: Mapper<TodoDomain, TodoLocalEntity>) :
     private fun getDemoTodoLocalEntity() : List<TodoLocalEntity> {
         val list : MutableList<TodoLocalEntity> = mutableListOf()
         for(i in 1..6) {
-            var todo : TodoLocalEntity = TodoLocalEntity()
+            var todo = TodoLocalEntity()
             todo.id = i
             todo.title = "Test "+i
             todo.description = "description"
