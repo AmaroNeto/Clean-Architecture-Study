@@ -1,13 +1,15 @@
 package com.amaro.todolist.presentation.view.adapter
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.amaro.todolist.R
 import com.amaro.todolist.presentation.model.TodoModel
+import com.amaro.todolist.presentation.view.fragment.TodoDetailFragment
 import kotlinx.android.synthetic.main.todo_list_item.view.*
 
 class TodoListAdapter(val context : Context,
@@ -25,7 +27,7 @@ class TodoListAdapter(val context : Context,
 
     override fun onBindViewHolder(holder: TodoViewHolder, position: Int) {
         val todo : TodoModel = todoList.get(position)
-        holder.bindView(todo, callback);
+        holder.bindView(todo, callback)
     }
 
     interface TodoListAdapterCallback {

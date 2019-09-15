@@ -8,19 +8,19 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.amaro.todolist.R
-import com.amaro.todolist.logger.AppLog
+import com.amaro.todolist.domain.log.Logger
 import com.amaro.todolist.presentation.model.TodoModel
+import org.koin.android.ext.android.inject
 
 class TodoDetailFragment : Fragment() {
 
-    //TODO inject dependency in Logger
-    val mLogger = AppLog()
-    var todoModel : TodoModel? = null
-    val TAG = "TodoDetailFragment"
-    lateinit var mTitle : TextView
+    private val mLogger: Logger by inject()
+    private var todoModel : TodoModel? = null
+    private val TAG = "TodoDetailFragment"
+    private lateinit var mTitle : TextView
 
     companion object {
-        private val ARG_TODO_MODEL = "TodoDetailFragment_TodoModel"
+        const val ARG_TODO_MODEL = "TodoDetailFragment_TodoModel"
 
         fun newInstance(todoModel: TodoModel) : TodoDetailFragment {
             val args: Bundle = Bundle()
@@ -52,14 +52,16 @@ class TodoDetailFragment : Fragment() {
         mLogger.i(TAG, "onActivityCreated")
 
         savedInstanceState?.let {
-            todoModel = it.getSerializable(ARG_TODO_MODEL) as TodoModel
+            todoModel = it.getSerializable(ARG_TODO_MODEL) as? TodoModel
         }
 
         mTitle.text = todoModel?.title
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        outState.putSerializable(ARG_TODO_MODEL, todoModel)
-        super.onSaveInstanceState(outState)
+        todoModel?.let {
+            outState.putSerializable(ARG_TODO_MODEL, it)
+            super.onSaveInstanceState(outState)
+        }
     }
 }
