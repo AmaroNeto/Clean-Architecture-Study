@@ -9,7 +9,7 @@ import io.reactivex.Single
 
 class FakeTodoLocalRepository(val mapper: Mapper<TodoDomain, TodoLocalEntity>) : TodoRepository {
 
-    override fun insertTodo(todoDomain: TodoDomain) {
+    override fun insertTodo(todoDomain: TodoDomain): Long {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
@@ -27,7 +27,7 @@ class FakeTodoLocalRepository(val mapper: Mapper<TodoDomain, TodoLocalEntity>) :
 
     private fun getDemoTodoLocalEntity() : List<TodoLocalEntity> {
         val list : MutableList<TodoLocalEntity> = mutableListOf()
-        for(i in 1..6) {
+        for(i in 1..6L) {
             var todo = TodoLocalEntity()
             todo.id = i
             todo.title = "Test "+i

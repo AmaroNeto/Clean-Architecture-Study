@@ -4,6 +4,6 @@ import java.io.Serializable
 
 class TodoModel(var title: String = "",
                 var done: Boolean = false) : Serializable{
-    var id : Int = 0
+    var id : Long = 0
     var description: String = ""
 }
