@@ -6,7 +6,7 @@ import com.amaro.todolist.domain.repositories.TodoRepository
 import org.koin.dsl.module
 
 val repositoryModule = module {
-    // single<TodoRepository> { TodoLocalRepository(get(), get(), get()) }
+    single<TodoRepository> { TodoLocalRepository(get(), get(), get()) }
 
-    single<TodoRepository> { FakeTodoLocalRepository(get()) }
+    // single<TodoRepository> { FakeTodoLocalRepository(get()) }
 }

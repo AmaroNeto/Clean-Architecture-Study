@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">TodoList</string>
+    <string name="new_todo">New Todo</string>
+    <string name="title">Title</string>
+    <string name="description">Description</string>
+    <string name="save">Save</string>
+    <string name="error_message_empty_string">The text can\'t be empty</string>
+    <string name="please_correct_errors">Please, correct errors</string>
+    <string name="todo_created">Todo created with success</string>
+    <string name="generic_error_message">Some error occorred.</string>
 </resources>

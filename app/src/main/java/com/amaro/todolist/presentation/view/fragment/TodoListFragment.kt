@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.amaro.todolist.R
@@ -17,6 +18,7 @@ import com.amaro.todolist.presentation.view.Response
 import com.amaro.todolist.presentation.view.Status
 import com.amaro.todolist.presentation.view.adapter.TodoListAdapter
 import com.amaro.todolist.presentation.viewmodel.ListTodosViewModel
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -28,6 +30,7 @@ class TodoListFragment : Fragment(), TodoListAdapter.TodoListAdapterCallback {
     val TAG = "TodoListFragment"
     lateinit var todoListRecyclerview : RecyclerView
     lateinit var progressBar : ProgressBar
+    lateinit var newTodoButton: FloatingActionButton
     lateinit var mCallBack : OnItemClickListener
 
     interface OnItemClickListener {
@@ -55,6 +58,7 @@ class TodoListFragment : Fragment(), TodoListAdapter.TodoListAdapterCallback {
         val view = inflater.inflate(R.layout.todo_list_fragment, container, false)
         todoListRecyclerview = view.findViewById(R.id.todoListRecyclerview)
         progressBar = view.findViewById(R.id.progressBar)
+        newTodoButton = view.findViewById(R.id.newTodoButton)
 
         return view
     }
@@ -63,6 +67,7 @@ class TodoListFragment : Fragment(), TodoListAdapter.TodoListAdapterCallback {
         super.onActivityCreated(savedInstanceState)
         mLogger.d(TAG, "onActivityCreated")
 
+        setNewTodoButton()
         setRecyclerView()
         vm.response.observe(viewLifecycleOwner, Observer { response -> processResponse(response) })
     }
@@ -71,6 +76,12 @@ class TodoListFragment : Fragment(), TodoListAdapter.TodoListAdapterCallback {
         mLogger.d(TAG, "setRecyclerView")
         todoListRecyclerview.layoutManager =  LinearLayoutManager(activity);
         todoListRecyclerview.setHasFixedSize(true)
+    }
+
+    private fun setNewTodoButton() {
+        newTodoButton.setOnClickListener {
+            view?.findNavController()?.navigate(R.id.action_todoListFragment_to_newTodoFragment)
+        }
     }
 
     private fun processResponse(response: Response) {

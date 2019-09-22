@@ -26,13 +26,16 @@ class NewTodoViewModel(val observable: SingleObservableUseCase<TodoDomain, Long>
     }
 
     fun create(todoModel: TodoModel){
+        response.value = Response.loading()
         observable.execute(object : DisposableSingleObserver<Long>() {
             override fun onSuccess(t: Long) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                logger.v(TAG, "onSuccess : $t")
+                response.value = Response.success(t)
             }
 
             override fun onError(e: Throwable) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                logger.v(TAG, "onError")
+                response.value = Response.error(e)
             }
 
         }, mapper.mapToDomain(todoModel))
