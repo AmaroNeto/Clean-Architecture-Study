@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "todo")
 class TodoLocalEntity {
     @PrimaryKey(autoGenerate = true)
-    var id: Int = 0
+    var id: Long = 0
     @ColumnInfo(name = "title")
     var title: String = ""
     @ColumnInfo(name = "done")

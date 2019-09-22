@@ -3,15 +3,15 @@ package com.amaro.todolist.presentation.viewmodel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.amaro.todolist.domain.entities.TodoDomain
-import com.amaro.todolist.domain.executor.ObservableUseCase
+import com.amaro.todolist.domain.executor.FlowableObservableUseCase
 import com.amaro.todolist.domain.log.Logger
 import com.amaro.todolist.presentation.mapper.Mapper
 import com.amaro.todolist.presentation.model.TodoModel
 import com.amaro.todolist.presentation.view.Response
 import io.reactivex.subscribers.DisposableSubscriber
 
-class ListTodosViewModel(var listAllTodos : ObservableUseCase<Unit, List<TodoDomain>>,
-                         var response : MutableLiveData<Response>,
+class ListTodosViewModel(val listAllTodos : FlowableObservableUseCase<Unit, List<TodoDomain>>,
+                         val response : MutableLiveData<Response>,
                          val mapper: Mapper<TodoDomain, TodoModel>,
                          val logger: Logger) : ViewModel() {
 

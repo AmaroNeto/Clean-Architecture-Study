@@ -1,8 +1,7 @@
 package com.amaro.todolist.domain.usercases
 
-import android.R
 import io.reactivex.Flowable
 
-abstract class UseCase<P,R> {
+abstract class FlowableUseCase<P,R> {
     abstract fun execute(params: P): Flowable<R>
 }

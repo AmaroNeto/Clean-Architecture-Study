@@ -8,6 +8,11 @@ import io.reactivex.Flowable
 import io.reactivex.Single
 
 class FakeTodoLocalRepository(val mapper: Mapper<TodoDomain, TodoLocalEntity>) : TodoRepository {
+
+    override fun insertTodo(todoDomain: TodoDomain) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     override fun getAllTodos(): Flowable<List<TodoDomain>> {
         return createFlowable().map {
             it.map { todo ->

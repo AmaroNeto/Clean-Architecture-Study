@@ -7,7 +7,6 @@ import com.amaro.todolist.domain.entities.TodoDomain
 import com.amaro.todolist.domain.log.Logger
 import com.amaro.todolist.domain.repositories.TodoRepository
 import io.reactivex.Flowable
-import io.reactivex.Single
 
 class TodoLocalRepository(val todoDao: TodoDao,
                           val mapper: Mapper<TodoDomain, TodoLocalEntity>,
@@ -22,5 +21,10 @@ class TodoLocalRepository(val todoDao: TodoDao,
                 mapper.mapToDomain(todo)
             }
         }
+    }
+
+    override fun insertTodo(todoDomain: TodoDomain): Long {
+        log.v(TAG, "new Todo inserted: {${todoDomain.title}}")
+        return todoDao.insertTodo(mapper.mapFromDomain(todoDomain))
     }
 }

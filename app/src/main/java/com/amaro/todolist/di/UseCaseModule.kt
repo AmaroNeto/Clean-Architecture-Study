@@ -1,15 +1,15 @@
 package com.amaro.todolist.di
 
 import com.amaro.todolist.domain.entities.TodoDomain
-import com.amaro.todolist.domain.executor.ObservableUseCase
-import com.amaro.todolist.domain.executor.ObservableUseCaseImpl
-import com.amaro.todolist.domain.usercases.ListTodosUserCase
-import com.amaro.todolist.domain.usercases.UseCase
+import com.amaro.todolist.domain.executor.FlowableObservableUseCase
+import com.amaro.todolist.domain.executor.FlowableObservableUseCaseImpl
+import com.amaro.todolist.domain.usercases.ListTodosFlowableUseCase
+import com.amaro.todolist.domain.usercases.FlowableUseCase
 import org.koin.dsl.module
 
 val useCaseModule = module {
 
-    single<UseCase<Unit, List<TodoDomain>>> { ListTodosUserCase(get(), get()) }
+    single<FlowableUseCase<Unit, List<TodoDomain>>> { ListTodosFlowableUseCase(get(), get()) }
 
-    single<ObservableUseCase<Unit, List<TodoDomain>>> { ObservableUseCaseImpl(get()) }
+    single<FlowableObservableUseCase<Unit, List<TodoDomain>>> { FlowableObservableUseCaseImpl(get()) }
 }
