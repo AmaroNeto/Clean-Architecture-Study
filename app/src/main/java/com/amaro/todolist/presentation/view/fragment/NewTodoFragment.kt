@@ -99,11 +99,13 @@ class NewTodoFragment : Fragment() {
     private fun showLoading() {
         mLogger.v(TAG,"show loading")
         progressBar.visibility = View.VISIBLE
+        saveButton.visibility = View.GONE
     }
 
     private fun hideLoading() {
         mLogger.v(TAG,"hide loading")
         progressBar.visibility = View.GONE
+        saveButton.visibility = View.VISIBLE
     }
 
     private fun getTodoModel(): TodoModel {

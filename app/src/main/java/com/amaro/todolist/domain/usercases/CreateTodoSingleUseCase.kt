@@ -9,6 +9,6 @@ class CreateTodoSingleUseCase(val todorepository: TodoRepository,
                               val log : Logger) : SingleUseCase<TodoDomain, Long>() {
 
     override fun execute(params: TodoDomain): Single<Long> {
-        return Single.just(todorepository.insertTodo(params))
+        return todorepository.insertTodo(params)
     }
 }
