@@ -92,6 +92,9 @@ class TodoListFragment : Fragment(), TodoListAdapter.TodoListAdapterCallback {
                 renderResponse(response)
                 hideLoading()
             }
+            Status.ERROR -> {
+                // TODO handle error
+            }
         }
     }
     override fun onItemClicked(todoModel: TodoModel) {

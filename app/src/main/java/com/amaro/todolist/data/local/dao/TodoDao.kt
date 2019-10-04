@@ -6,6 +6,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.amaro.todolist.data.local.entities.TodoLocalEntity
 import io.reactivex.Flowable
+import io.reactivex.Single
 
 @Dao
 interface TodoDao {
@@ -13,5 +14,5 @@ interface TodoDao {
     fun getAllTodos(): Flowable<List<TodoLocalEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertTodo(todoLocalEntity: TodoLocalEntity): Long
+    fun insertTodo(todoLocalEntity: TodoLocalEntity): Single<Long>
 }

@@ -26,8 +26,13 @@ class NewTodoViewModel(val observable: SingleObservableUseCase<TodoDomain, Long>
     }
 
     fun create(todoModel: TodoModel){
-        response.value = Response.loading()
         observable.execute(object : DisposableSingleObserver<Long>() {
+            override fun onStart() {
+                super.onStart()
+                response.value = Response.loading()
+                logger.v(TAG, "onStarted")
+            }
+
             override fun onSuccess(t: Long) {
                 logger.v(TAG, "onSuccess : $t")
                 response.value = Response.success(t)

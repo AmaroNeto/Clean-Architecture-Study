@@ -79,6 +79,7 @@ class NewTodoFragment : Fragment() {
                 hideLoading()
             }
             Status.ERROR -> {
+                Log.e(TAG, "Process response error ${response.error}")
                 hideLoading()
                 // TODO handle error
             }

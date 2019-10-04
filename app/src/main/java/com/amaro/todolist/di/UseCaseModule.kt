@@ -20,5 +20,5 @@ val useCaseModule = module {
 
     single<SingleUseCase<TodoDomain, Long>> { CreateTodoSingleUseCase(get(), get()) }
 
-    single<SingleObservableUseCase<TodoDomain, Long>> { SingleObservableUseCaseImpl(get()) }
+    factory <SingleObservableUseCase<TodoDomain, Long>> { SingleObservableUseCaseImpl(get()) }
 }
