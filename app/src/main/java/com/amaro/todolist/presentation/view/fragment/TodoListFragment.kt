@@ -16,13 +16,13 @@ import com.amaro.todolist.domain.log.Logger
 import com.amaro.todolist.presentation.model.TodoModel
 import com.amaro.todolist.presentation.view.Response
 import com.amaro.todolist.presentation.view.Status
-import com.amaro.todolist.presentation.view.adapter.TodoListAdapter
+import com.amaro.todolist.presentation.view.adapter.GenericAdapter
 import com.amaro.todolist.presentation.viewmodel.ListTodosViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class TodoListFragment : Fragment(), TodoListAdapter.TodoListAdapterCallback {
+class TodoListFragment : Fragment(), GenericAdapter.AppAdapterListener<TodoModel> {
 
     val vm : ListTodosViewModel by viewModel()
     val mLogger: Logger by inject()
@@ -97,15 +97,17 @@ class TodoListFragment : Fragment(), TodoListAdapter.TodoListAdapterCallback {
             }
         }
     }
-    override fun onItemClicked(todoModel: TodoModel) {
-        mLogger.v(TAG,"onItemClicked: ${todoModel.id} - ${todoModel.title}")
-        mCallBack.onItemClicked(todoModel)
+
+    override fun onItemClick(model: TodoModel, position: Int) {
+        mLogger.v(TAG,"onItemClicked: ${model.id} - ${model.title}")
+        mCallBack.onItemClicked(model)
     }
 
     private fun renderResponse(response: Response) {
         val list : List<TodoModel> = response.data as List<TodoModel>
         mLogger.v(TAG, "renderResponse list "+list.toString())
-        val adapter = context?.let { TodoListAdapter(it, list, this) }
+        val adapter = context?.let { GenericAdapter(list) }
+        adapter?.listener = this
         todoListRecyclerview.adapter = adapter
     }
 
