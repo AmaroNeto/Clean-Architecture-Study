@@ -6,6 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
@@ -60,6 +62,8 @@ class TodoListFragment : Fragment(), GenericAdapter.AppAdapterListener<TodoModel
         todoListRecyclerview = view.findViewById(R.id.todoListRecyclerview)
         progressBar = view.findViewById(R.id.progressBar)
         newTodoButton = view.findViewById(R.id.newTodoButton)
+
+        setUpActionBar()
 
         return view
     }
@@ -124,4 +128,12 @@ class TodoListFragment : Fragment(), GenericAdapter.AppAdapterListener<TodoModel
         progressBar.visibility = View.GONE
         todoListRecyclerview.visibility = View.VISIBLE;
     }
+
+    private fun setUpActionBar() {
+        val actionBar = (activity as AppCompatActivity?)?.supportActionBar
+        val toolbar = actionBar?.customView
+        val toolbarTitle = toolbar?.findViewById<TextView>(R.id.toolbarTitle)
+        toolbarTitle?.text = getString(R.string.app_name)
+    }
+
 }

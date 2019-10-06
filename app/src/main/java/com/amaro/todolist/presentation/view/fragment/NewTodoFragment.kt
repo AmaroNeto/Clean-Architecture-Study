@@ -7,13 +7,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ProgressBar
+import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
 import com.amaro.todolist.R
 import com.amaro.todolist.domain.log.Logger
-import com.amaro.todolist.logger.AppLog
 import com.amaro.todolist.presentation.model.TodoModel
 import com.amaro.todolist.presentation.view.Response
 import com.amaro.todolist.presentation.view.Status
@@ -49,6 +50,8 @@ class NewTodoFragment : Fragment() {
         descriptionTli = view.findViewById(R.id.descritpionTli)
         descriptionEditText = view.findViewById(R.id.descriptionEditText)
         progressBar = view.findViewById(R.id.progressBar)
+
+        setUpActionBar()
 
         return view
     }
@@ -135,6 +138,13 @@ class NewTodoFragment : Fragment() {
     private fun clearErrorsMessages() {
         titleTli.error = null
         descriptionTli.error = null
+    }
+
+    private fun setUpActionBar() {
+        val actionBar = (activity as AppCompatActivity?)?.supportActionBar
+        val toolbar = actionBar?.customView
+        val toolbarTitle = toolbar?.findViewById<TextView>(R.id.toolbarTitle)
+        toolbarTitle?.text = getString(R.string.new_todo)
     }
 
     companion object {
