@@ -9,6 +9,7 @@ import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.amaro.todolist.R
@@ -74,7 +75,8 @@ class TodoListFragment : Fragment(), GenericAdapter.AppAdapterListener<TodoModel
 
     private fun setRecyclerView() {
         mLogger.d(TAG, "setRecyclerView")
-        todoListRecyclerview.layoutManager =  LinearLayoutManager(activity);
+        todoListRecyclerview.layoutManager =  LinearLayoutManager(activity)
+        todoListRecyclerview.addItemDecoration(DividerItemDecoration(activity, LinearLayoutManager.VERTICAL))
         todoListRecyclerview.setHasFixedSize(true)
     }
 

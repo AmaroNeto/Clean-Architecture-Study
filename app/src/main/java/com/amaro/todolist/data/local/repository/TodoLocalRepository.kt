@@ -24,6 +24,10 @@ class TodoLocalRepository(val todoDao: TodoDao,
         }
     }
 
+    override fun countTodos(): Flowable<Int> {
+        return todoDao.countTodos()
+    }
+
     override fun insertTodo(todoDomain: TodoDomain): Single<Long> {
         log.v(TAG, "new Todo inserted: {${todoDomain.title}}")
         return todoDao.insertTodo(mapper.mapFromDomain(todoDomain))

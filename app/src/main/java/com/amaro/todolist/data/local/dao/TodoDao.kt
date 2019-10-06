@@ -15,4 +15,7 @@ interface TodoDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertTodo(todoLocalEntity: TodoLocalEntity): Single<Long>
+
+    @Query("SELECT COUNT(id) FROM todo WHERE done = 0")
+    fun countTodos(): Flowable<Int>
 }

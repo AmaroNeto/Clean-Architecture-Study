@@ -6,5 +6,6 @@ import io.reactivex.Single
 
 interface TodoRepository {
     fun getAllTodos() : Flowable<List<TodoDomain>>
+    fun countTodos() : Flowable<Int>
     fun insertTodo(todoDomain: TodoDomain): Single<Long>
 }
