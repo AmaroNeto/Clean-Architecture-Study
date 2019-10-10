@@ -10,6 +10,7 @@
     <string name="generic_error_message">Some error occorred.</string>
 
     <plurals name="numberOfActivities">
+        <item quantity="zero">none activity</item>
         <item quantity="one">%d activity</item>
         <item quantity="other">%d activities</item>
     </plurals>
