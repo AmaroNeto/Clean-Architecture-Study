@@ -1,5 +1,6 @@
 package com.amaro.todolist.di
 
+import com.amaro.todolist.domain.entities.Result
 import com.amaro.todolist.domain.entities.TodoDomain
 import com.amaro.todolist.domain.executor.FlowableObservableUseCase
 import com.amaro.todolist.domain.executor.FlowableObservableUseCaseImpl
@@ -12,11 +13,11 @@ import org.koin.dsl.module
 
 val useCaseModule = module {
 
-    single<FlowableUseCase<Unit, List<TodoDomain>>>(named("ListTodosFlowableUseCase")) { ListTodosFlowableUseCase(get(), get()) }
+    single<FlowableUseCase<Unit, Result<List<TodoDomain>>>>(named("ListTodosFlowableUseCase")) { ListTodosFlowableUseCase(get(), get(), get()) }
 
-    single<FlowableUseCase<Unit, Int>>(named("CountTodosFlowableUseCase")) { CountTodosFlowableUseCase(get(), get()) } bind CountTodosFlowableUseCase::class
+    single<FlowableUseCase<Unit, Result<Int>>>(named("CountTodosFlowableUseCase")) { CountTodosFlowableUseCase(get(), get(), get()) } bind CountTodosFlowableUseCase::class
 
-    single<SingleUseCase<TodoDomain, Long>>(named("CreateTodoSingleUseCase")) { CreateTodoSingleUseCase(get(), get()) }
+    single<SingleUseCase<TodoDomain, Result<Long>>>(named("CreateTodoSingleUseCase")) { CreateTodoSingleUseCase(get(), get(), get()) }
 
     factory<FlowableObservableUseCase<Unit, List<TodoDomain>>>(named("ListTodosFlowableObservableUseCase")) { FlowableObservableUseCaseImpl(get(named("ListTodosFlowableUseCase"))) }
 

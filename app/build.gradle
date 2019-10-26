@@ -47,9 +47,9 @@ dependencies {
     implementation 'io.reactivex.rxjava2:rxjava:2.2.9'
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
 
-    implementation 'androidx.room:room-runtime:2.2.0-rc01'
-    implementation 'androidx.room:room-rxjava2:2.2.0-rc01'
-    kapt 'androidx.room:room-compiler:2.2.0-rc01'
+    implementation 'androidx.room:room-runtime:2.2.0'
+    implementation 'androidx.room:room-rxjava2:2.2.0'
+    kapt 'androidx.room:room-compiler:2.2.0'
 
     implementation "android.arch.lifecycle:runtime:2.1.0-alpha02"
     implementation "android.arch.lifecycle:extensions:2.1.0-alpha02"
@@ -69,4 +69,6 @@ dependencies {
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     androidTestImplementation 'com.agoda.kakao:kakao:2.1.0'
+    testImplementation 'androidx.test:core:1.2.0'
+    testImplementation 'org.mockito:mockito-core:2.23.0'
 }

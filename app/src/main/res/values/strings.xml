@@ -14,4 +14,9 @@
         <item quantity="one">%d activity</item>
         <item quantity="other">%d activities</item>
     </plurals>
+
+    <!-- transactions labels -->
+    <string name="transaction_title" translatable="false">title</string>
+    <string name="transaction_description" translatable="false">description</string>
+    <string name="transaction_view" translatable="false">view</string>
 </resources>

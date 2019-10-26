@@ -2,7 +2,6 @@ package com.amaro.todolist.domain.executor
 
 import com.amaro.todolist.domain.usercases.FlowableUseCase
 import io.reactivex.disposables.CompositeDisposable
-import org.jetbrains.annotations.NotNull
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable

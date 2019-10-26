@@ -65,7 +65,7 @@ class MainActivity : AppCompatActivity(), TodoListFragment.OnItemClickListener {
     }
 
     private fun renderResponse(response: Response) {
-        val todoCount : Long = response.data as Long
+        val todoCount : Int = response.data as Int
         mLogger.v(TAG, "renderResponse $todoCount")
         val toolbarSubtitleTxt = resources.getQuantityString(R.plurals.numberOfActivities, todoCount.toInt(), todoCount)
         toolbarSubtitle.text = toolbarSubtitleTxt
@@ -88,6 +88,7 @@ class MainActivity : AppCompatActivity(), TodoListFragment.OnItemClickListener {
                 .setPrimaryNavigationFragment(host)
                 .commit()
         } else {
+
             val navHostFragment =
                 supportFragmentManager.findFragmentById(R.id.todo_list_fragment) as NavHostFragment
             NavHostFragment.findNavController(navHostFragment)

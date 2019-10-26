@@ -6,9 +6,10 @@ import com.amaro.todolist.domain.executor.FlowableObservableUseCase
 import com.amaro.todolist.domain.log.Logger
 import com.amaro.todolist.presentation.view.Response
 import io.reactivex.subscribers.DisposableSubscriber
+import com.amaro.todolist.domain.entities.Result
 
 class MainViewModel(
-    val countTodos: FlowableObservableUseCase<Unit,Long>,
+    val countTodos: FlowableObservableUseCase<Unit,Result<Int>>,
     val response : MutableLiveData<Response>,
     val logger: Logger) : ViewModel() {
 
@@ -25,12 +26,19 @@ class MainViewModel(
         countTodos.dispose()
     }
 
-    fun response() : MutableLiveData<Response> {
-        return response
+    private fun handleResult(result: Result<Int>) {
+        when(result) {
+            is Result.Success -> {
+                response.value = Response.success(result.data)
+            }
+            is Result.Error -> {
+                // TODO handle error
+            }
+        }
     }
 
     private fun loadData(){
-        countTodos.execute(object : DisposableSubscriber<Long>() {
+        countTodos.execute(object : DisposableSubscriber<Result<Int>>() {
             override fun onStart() {
                 logger.v(TAG, "onStart")
                 request(SUBSCRIBER_REQUEST_MAX_VALUE)
@@ -40,9 +48,9 @@ class MainViewModel(
                 logger.v(TAG, "onComplete")
             }
 
-            override fun onNext(t: Long) {
+            override fun onNext(t: Result<Int>) {
                 logger.v(TAG, "onNext : $t")
-                response.value = Response.success(t)
+                handleResult(t)
             }
 
             override fun onError(t: Throwable) {

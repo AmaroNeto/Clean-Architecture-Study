@@ -14,7 +14,7 @@ class Response(val status: Status, val data : Any? = Any(), val error : Throwabl
         }
 
         fun error(@NonNull error : Throwable) : Response {
-            return Response(Status.SUCCESS, error = error)
+            return Response(Status.ERROR, error = error)
         }
     }
 }

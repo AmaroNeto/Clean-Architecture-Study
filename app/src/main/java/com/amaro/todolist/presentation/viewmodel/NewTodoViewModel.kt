@@ -9,8 +9,9 @@ import com.amaro.todolist.presentation.mapper.Mapper
 import com.amaro.todolist.presentation.model.TodoModel
 import com.amaro.todolist.presentation.view.Response
 import io.reactivex.observers.DisposableSingleObserver
+import com.amaro.todolist.domain.entities.Result
 
-class NewTodoViewModel(val observable: SingleObservableUseCase<TodoDomain, Long>,
+class NewTodoViewModel(val observable: SingleObservableUseCase<TodoDomain, Result<Long>>,
                        val response : MutableLiveData<Response>,
                        val mapper: Mapper<TodoDomain, TodoModel>,
                        val logger: Logger) : ViewModel() {
@@ -21,21 +22,28 @@ class NewTodoViewModel(val observable: SingleObservableUseCase<TodoDomain, Long>
         observable.dispose()
     }
 
-    fun response() : MutableLiveData<Response> {
-        return response
+    private fun handleResult(result: Result<Long>) {
+        when(result) {
+            is Result.Success -> {
+                response.value = Response.success(result.data)
+            }
+            is Result.Error -> {
+                // TODO handle error
+            }
+        }
     }
 
     fun create(todoModel: TodoModel){
-        observable.execute(object : DisposableSingleObserver<Long>() {
+        observable.execute(object : DisposableSingleObserver<Result<Long>>() {
             override fun onStart() {
                 super.onStart()
                 response.value = Response.loading()
                 logger.v(TAG, "onStarted")
             }
 
-            override fun onSuccess(t: Long) {
+            override fun onSuccess(t: Result<Long>) {
                 logger.v(TAG, "onSuccess : $t")
-                response.value = Response.success(t)
+                handleResult(t)
             }
 
             override fun onError(e: Throwable) {

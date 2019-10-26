@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import com.amaro.todolist.R
 import com.amaro.todolist.domain.log.Logger
 import com.amaro.todolist.presentation.model.TodoModel
+import kotlinx.android.synthetic.main.todo_detail_fragment.*
 import org.koin.android.ext.android.inject
 
 class TodoDetailFragment : Fragment() {
@@ -56,6 +57,7 @@ class TodoDetailFragment : Fragment() {
         }
 
         mTitle.text = todoModel?.title
+        todoDescriptionTxt.text = todoModel?.description
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

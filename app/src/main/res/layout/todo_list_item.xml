@@ -12,7 +12,8 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:transitionName="@string/transaction_view">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:background="?selectableItemBackground"
@@ -28,6 +29,7 @@
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="8dp"
                     android:text="@{model.title}"
+                    android:transitionName="@string/title"
                     android:textStyle="bold"
                     android:textSize="20sp"
                     app:layout_constraintEnd_toStartOf="@+id/checkBox"
@@ -45,6 +47,7 @@
                     android:layout_weight="1"
                     android:maxLines="1"
                     android:text="@{model.description}"
+                    android:transitionName="@string/description"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/checkBox"
                     app:layout_constraintStart_toStartOf="@+id/title"
