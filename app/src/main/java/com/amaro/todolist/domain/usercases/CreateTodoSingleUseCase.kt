@@ -12,7 +12,10 @@ class CreateTodoSingleUseCase(val todorepository: TodoRepository,
                               val log : Logger,
                               val errorHandler: ErrorHandler) : SingleUseCase<TodoDomain, Result<Long>>() {
 
+    val TAG = "CreateTodoSingleUseCase"
+
     override fun execute(params: TodoDomain): Single<Result<Long>> {
+        log.d(TAG, "execute usercase")
         return todorepository.insertTodo(params)
             .toResult(errorHandler)
     }

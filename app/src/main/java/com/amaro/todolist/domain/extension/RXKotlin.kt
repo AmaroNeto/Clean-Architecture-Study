@@ -9,7 +9,7 @@ fun <T> Flowable<T>.toResult(errorHandler: ErrorHandler): Flowable<Result<T>> =
     this.map {
         Result.Success(it) as Result<T>
     }.onErrorReturn {
-        Result.Error(errorHandler.getError(it))
+        Result.Error<T>(errorHandler.getError(it))
     }
 
 fun <T> Single<T>.toResult(errorHandler: ErrorHandler): Single<Result<T>> =
