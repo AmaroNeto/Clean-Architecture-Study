@@ -12,5 +12,5 @@ val mapperModule = module {
 
     single<Mapper<TodoDomain, TodoLocalEntity>> { TodoLocalMapper() }
 
-    single< com.amaro.todolist.presentation.mapper.Mapper<TodoDomain, TodoModel>> { TodoModelMapper() }
+    single<com.amaro.todolist.presentation.mapper.Mapper<TodoDomain, TodoModel>> { TodoModelMapper() }
 }

@@ -1,9 +1,6 @@
 package com.amaro.todolist.data.local.dao
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import com.amaro.todolist.data.local.entities.TodoLocalEntity
 import io.reactivex.Flowable
 import io.reactivex.Single
@@ -15,6 +12,9 @@ interface TodoDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertTodo(todoLocalEntity: TodoLocalEntity): Single<Long>
+
+    @Update
+    fun updateTodo(todoLocalEntity: TodoLocalEntity): Single<Int>
 
     @Query("SELECT COUNT(id) FROM todo WHERE done = 0")
     fun countTodos(): Flowable<Int>

@@ -29,7 +29,12 @@ class TodoLocalRepository(val todoDao: TodoDao,
     }
 
     override fun insertTodo(todoDomain: TodoDomain): Single<Long> {
-        log.v(TAG, "new Todo inserted: {${todoDomain.title}}")
+        log.d(TAG, "new Todo inserted: {${todoDomain.title}}")
         return todoDao.insertTodo(mapper.mapFromDomain(todoDomain))
+    }
+
+    override fun updateTodo(todoDomain: TodoDomain): Single<Int> {
+        log.d(TAG, "Todo updated: {${todoDomain.title}}")
+        return todoDao.updateTodo(mapper.mapFromDomain(todoDomain))
     }
 }

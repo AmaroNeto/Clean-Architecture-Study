@@ -19,16 +19,16 @@ import com.amaro.todolist.domain.log.Logger
 import com.amaro.todolist.presentation.model.TodoModel
 import com.amaro.todolist.presentation.view.Response
 import com.amaro.todolist.presentation.view.Status
-import com.amaro.todolist.presentation.view.adapter.GenericAdapter
+import com.amaro.todolist.presentation.view.adapter.TodoListAdapter
 import com.amaro.todolist.presentation.viewmodel.ListTodosViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class TodoListFragment : Fragment(), GenericAdapter.AppAdapterListener<TodoModel> {
+class TodoListFragment : Fragment(), TodoListAdapter.TodoListActions {
 
-    val vm : ListTodosViewModel by viewModel()
-    val mLogger: Logger by inject()
+    private val viewModel : ListTodosViewModel by viewModel()
+    private val mLogger: Logger by inject()
 
     val TAG = "TodoListFragment"
     lateinit var todoListRecyclerview : RecyclerView
@@ -72,30 +72,37 @@ class TodoListFragment : Fragment(), GenericAdapter.AppAdapterListener<TodoModel
         super.onActivityCreated(savedInstanceState)
         mLogger.d(TAG, "onActivityCreated")
 
-        setNewTodoButton()
-        setRecyclerView()
-        vm.response.observe(viewLifecycleOwner, Observer { response -> processResponse(response) })
+        setUpNewTodoButton()
+        setUpRecyclerView()
+        setUpObserve()
     }
 
-    private fun setRecyclerView() {
+    private fun setUpObserve() {
+        viewModel.loadDataResponse.observe(viewLifecycleOwner, Observer { response -> processLoadDataResponse(response) })
+        viewModel.updateTodoResponse.observe(viewLifecycleOwner, Observer { response -> processUpdateTodoResponse(response) })
+    }
+
+    private fun setUpRecyclerView() {
         mLogger.d(TAG, "setRecyclerView")
-        todoListRecyclerview.layoutManager =  LinearLayoutManager(activity)
-        todoListRecyclerview.addItemDecoration(DividerItemDecoration(activity, LinearLayoutManager.VERTICAL))
-        todoListRecyclerview.setHasFixedSize(true)
+        todoListRecyclerview.apply{
+            layoutManager =  LinearLayoutManager(activity)
+            addItemDecoration(DividerItemDecoration(activity, LinearLayoutManager.VERTICAL))
+            setHasFixedSize(true)
+        }
     }
 
-    private fun setNewTodoButton() {
+    private fun setUpNewTodoButton() {
         newTodoButton.setOnClickListener {
             view?.findNavController()?.navigate(R.id.action_todoListFragment_to_newTodoFragment)
         }
     }
 
-    private fun processResponse(response: Response) {
-        mLogger.d(TAG,"response status: ${response.status}")
+    private fun processLoadDataResponse(response: Response) {
+        mLogger.d(TAG,"load data response status: ${response.status}")
         when(response.status) {
             Status.LOADING -> showLoading()
             Status.SUCCESS -> {
-                renderResponse(response)
+                renderLoadDataResponse(response)
                 hideLoading()
             }
             Status.ERROR -> {
@@ -104,17 +111,34 @@ class TodoListFragment : Fragment(), GenericAdapter.AppAdapterListener<TodoModel
         }
     }
 
-    override fun onItemClick(model: TodoModel, position: Int) {
-        mLogger.v(TAG,"onItemClicked: ${model.id} - ${model.title}")
-        mCallBack.onItemClicked(model)
+    private fun processUpdateTodoResponse(response: Response) {
+        mLogger.d(TAG,"update response status: ${response.status}")
+        when(response.status) {
+            Status.SUCCESS -> {
+                renderUpdateResponse(response)
+            }
+            Status.ERROR -> {
+                // TODO handle error
+            }
+        }
     }
 
-    private fun renderResponse(response: Response) {
+    override fun onResume() {
+        super.onResume()
+        viewModel.loadData()
+    }
+
+    private fun renderLoadDataResponse(response: Response) {
         val list : List<TodoModel> = response.data as List<TodoModel>
         mLogger.v(TAG, "renderResponse list "+list.toString())
-        val adapter = context?.let { GenericAdapter(list) }
-        adapter?.listener = this
+
+        val adapter = context?.let { TodoListAdapter(it, list) }
+        adapter?.actions = this
         todoListRecyclerview.adapter = adapter
+    }
+
+    private fun renderUpdateResponse(response: Response) {
+        // TODO
     }
 
     private fun showLoading() {
@@ -134,6 +158,21 @@ class TodoListFragment : Fragment(), GenericAdapter.AppAdapterListener<TodoModel
         val toolbar = actionBar?.customView
         val toolbarTitle = toolbar?.findViewById<TextView>(R.id.toolbarTitle)
         toolbarTitle?.text = getString(R.string.app_name)
+    }
+
+    override fun onClickItem(todoModel: TodoModel?, position: Int) {
+        mLogger.d(TAG,"onItemClicked: ${todoModel?.id} - ${todoModel?.title}")
+        todoModel?.let {
+            mCallBack.onItemClicked(it)
+        }
+    }
+
+    override fun onCheckClickItem(todoModel: TodoModel?, position: Int, value: Boolean) {
+        mLogger.d(TAG,"onCheckClickItem: ${todoModel?.id} - $position - $value")
+        todoModel?.run {
+            done = value
+            viewModel.updateTodo(todoModel)
+        }
     }
 
 }

@@ -19,9 +19,13 @@ val useCaseModule = module {
 
     single<SingleUseCase<TodoDomain, Result<Long>>>(named("CreateTodoSingleUseCase")) { CreateTodoSingleUseCase(get(), get(), get()) }
 
+    single<SingleUseCase<TodoDomain, Result<Int>>>(named("UpdateTodoSingleUseCase")) { UpdateTodoSingleUseCase(get(), get(), get()) }
+
     factory<FlowableObservableUseCase<Unit, List<TodoDomain>>>(named("ListTodosFlowableObservableUseCase")) { FlowableObservableUseCaseImpl(get(named("ListTodosFlowableUseCase"))) }
 
     factory<FlowableObservableUseCase<Unit, Long>>(named("CountTodosFlowableObservableUseCase")) { FlowableObservableUseCaseImpl(get(named("CountTodosFlowableUseCase"))) }
 
     factory<SingleObservableUseCase<TodoDomain, Long>>(named("CreateTodoObservableUseCase")) { SingleObservableUseCaseImpl(get(named("CreateTodoSingleUseCase"))) }
+
+    factory<SingleObservableUseCase<TodoDomain, Result<Int>>>(named("UpdateTodoObservableUseCase")) { SingleObservableUseCaseImpl(get(named("UpdateTodoSingleUseCase"))) }
 }

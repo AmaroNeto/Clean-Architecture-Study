@@ -16,6 +16,10 @@ class FakeTodoLocalRepository(val mapper: Mapper<TodoDomain, TodoLocalEntity>) :
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
+    override fun updateTodo(todoDomain: TodoDomain): Single<Int> {
+        TODO("Not yet implemented")
+    }
+
     override fun getAllTodos(): Flowable<List<TodoDomain>> {
         return createFlowable().map {
             it.map { todo ->
