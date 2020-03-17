@@ -20,10 +20,9 @@ import java.io.IOException
 
 @RunWith(
     MockitoJUnitRunner::class)
-class CreateTodoSingleUseCaseTest {
+class UpdateTodoSingleUseCaseTest {
 
-    private val testSubscriber = TestObserver<Result<Long>>()
-
+    private val testSubscriber = TestObserver<Result<Int>>()
     @Mock
     private lateinit var todoRepository: TodoRepository
     @Mock
@@ -32,52 +31,53 @@ class CreateTodoSingleUseCaseTest {
     private lateinit var errorHandler: ErrorHandler
 
     @InjectMocks
-    private lateinit var useCase: CreateTodoSingleUseCase
+    private lateinit var useCase: UpdateTodoSingleUseCase
 
-    private val INSERT_RESULT = 5L
+    private val UPDATE_RESULT = 1
     private val todo = TodoDomain("test", false)
 
     @Before
     fun setup() {
-        Mockito.`when`(todoRepository.insertTodo(todo)).thenReturn(Single.just(INSERT_RESULT))
+        Mockito.`when`(todoRepository.updateTodo(todo)).thenReturn(Single.just(UPDATE_RESULT))
     }
 
     @Test
-    fun `when execute CreateTodoSingleUseCase then call insertTodo and log`() {
+    fun `when execute UpdateTodoSingleUseCase then call updateTodo and log`() {
         useCase.execute(todo).subscribe(testSubscriber)
 
-        Mockito.verify(todoRepository, Mockito.times(1)).insertTodo(todo)
+        Mockito.verify(todoRepository, Mockito.times(1)).updateTodo(todo)
         Mockito.verify(logger, Mockito.times(1)).d(ArgumentMatchers.anyString(), ArgumentMatchers.anyString())
 
         testSubscriber.assertNoErrors()
     }
 
     @Test
-    fun `when execute CreateTodoSingleUseCase then return a ResultSuccess`() {
+    fun `when execute UpdateTodoSingleUseCase then return a ResultSuccess`() {
         useCase.execute(todo).subscribe(testSubscriber)
 
-        testSubscriber.assertResult(Result.Success(INSERT_RESULT))
+        testSubscriber.assertResult(Result.Success(UPDATE_RESULT))
 
         testSubscriber.assertNoErrors()
     }
 
     @Test
-    fun `when insertTodo() throw an exception then CreateTodoSingleUseCase return error`() {
+    fun `when updateTodo() throw an exception then UpdateTodoSingleUseCase return error`() {
         val exception = IOException()
-        val result  = Result.Error<Long>(ErrorEntity.NetWork(exception))
+        val result  = Result.Error<Int>(ErrorEntity.Unknown(exception))
 
-        Mockito.`when`(todoRepository.insertTodo(todo)).thenReturn(Single.error(exception))
-        Mockito.`when`(errorHandler.getError(exception)).thenReturn(ErrorEntity.NetWork(exception))
+        Mockito.`when`(todoRepository.updateTodo(todo)).thenReturn(Single.error(exception))
+        Mockito.`when`(errorHandler.getError(exception)).thenReturn(ErrorEntity.Unknown(exception))
 
         useCase.execute(todo)
             .subscribeWith(testSubscriber)
 
-        Mockito.verify(todoRepository, Mockito.times(1)).insertTodo(todo)
+        Mockito.verify(todoRepository, Mockito.times(1)).updateTodo(todo)
         Mockito.verify(logger, Mockito.times(1)).d(ArgumentMatchers.anyString(), ArgumentMatchers.anyString())
         Mockito.verify(errorHandler, Mockito.times(1)).getError(exception)
 
         testSubscriber.assertResult(result)
         testSubscriber.assertNoErrors()
     }
+
 
 }
