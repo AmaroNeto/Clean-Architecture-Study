@@ -19,4 +19,10 @@
     <string name="transaction_title" translatable="false">title</string>
     <string name="transaction_description" translatable="false">description</string>
     <string name="transaction_view" translatable="false">view</string>
+    <string name="settings_title">Settings</string>
+    <string name="day_night_summary">Enable / Disable dark mode</string>
+    <string name="day_night_title">Dark Mode</string>
+    <string name="day_night_key">DayNight</string>
+    <string name="enabled">Enabled</string>
+    <string name="disabled">Disabled</string>
 </resources>

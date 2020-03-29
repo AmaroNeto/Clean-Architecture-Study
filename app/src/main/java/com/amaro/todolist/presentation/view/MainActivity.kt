@@ -1,10 +1,13 @@
 package com.amaro.todolist.presentation.view
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.ActionBar
 import androidx.lifecycle.Observer
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
+import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.amaro.todolist.R
 import com.amaro.todolist.domain.log.Logger
@@ -21,23 +24,36 @@ import java.util.*
 
 class MainActivity : AppCompatActivity(), TodoListFragment.OnItemClickListener {
 
-    val TAG = "MainActivity"
-    val mLogger: Logger by inject()
-    var twoPane = false
-    val vm : MainViewModel by viewModel()
+    private val TAG = "MainActivity"
+    private val mLogger: Logger by inject()
+    private var twoPane = false
+    private val vm : MainViewModel by viewModel()
+    private lateinit var navControler : NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.list_todo_activity)
 
-        setUpActionBar()
-        vm.response.observe(this, Observer { response -> processResponse(response) })
+        navControler =
+           NavHostFragment.findNavController(
+               supportFragmentManager.findFragmentById(R.id.todo_list_fragment) as NavHostFragment
+           )
 
+        setUpActionBar()
+        setUpObserver()
+        setUpTwoPanelConfig(savedInstanceState)
+    }
+
+    private fun setUpObserver() {
+        vm.response.observe(this, Observer { response -> processResponse(response) })
+    }
+
+    private fun setUpTwoPanelConfig(savedInstanceState : Bundle?) {
         if(isTwoPanel()) {
             twoPane = true
             mLogger.v(TAG, "isTwoPanel")
 
-            if(savedInstanceState == null) {
+            savedInstanceState?.run {
                 val host = NavHostFragment.create(R.navigation.tablet_nav_graph)
                 supportFragmentManager
                     .beginTransaction()
@@ -49,7 +65,6 @@ class MainActivity : AppCompatActivity(), TodoListFragment.OnItemClickListener {
         } else {
             twoPane = false
         }
-
     }
 
     private fun processResponse(response: Response) {
@@ -88,23 +103,38 @@ class MainActivity : AppCompatActivity(), TodoListFragment.OnItemClickListener {
                 .setPrimaryNavigationFragment(host)
                 .commit()
         } else {
-
-            val navHostFragment =
-                supportFragmentManager.findFragmentById(R.id.todo_list_fragment) as NavHostFragment
-            NavHostFragment.findNavController(navHostFragment)
+            navControler
                 .navigate(R.id.action_todoListFragment_to_todoDetailFragment, bundle)
         }
     }
 
     private fun setUpActionBar() {
-        supportActionBar?.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM)
-        supportActionBar?.setDisplayShowCustomEnabled(true)
-        supportActionBar?.setCustomView(R.layout.todo_main_toolbar)
+        supportActionBar?.apply {
+            displayOptions = ActionBar.DISPLAY_SHOW_CUSTOM
+            setDisplayShowCustomEnabled(true)
+            setCustomView(R.layout.todo_main_toolbar)
+        }
         toolbarTitle.text = getString(R.string.app_name)
 
         val currentDate = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date())
         toolbarInfo.text = currentDate
-        toolbarSubtitle.text = "teste"
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.todo_list_menu, menu);
+        return true;
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when(item?.itemId) {
+            R.id.action_settings ->  {
+                navControler
+                    .navigate(R.id.action_todoListFragment_to_settingsFragment)
+                return true
+            }
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
 }

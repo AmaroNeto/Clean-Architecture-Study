@@ -16,17 +16,24 @@
         <action
             android:id="@+id/action_todoListFragment_to_newTodoFragment"
             app:destination="@id/newTodoFragment" />
+
+        <action
+            android:id="@+id/action_todoListFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
     </fragment>
     <fragment
         android:id="@+id/todoDetailFragment"
         android:name="com.amaro.todolist.presentation.view.fragment.TodoDetailFragment"
         android:label="TodoDetailFragment"
         tools:layout="@layout/todo_detail_fragment">
-
     </fragment>
     <fragment
         android:id="@+id/newTodoFragment"
         android:name="com.amaro.todolist.presentation.view.fragment.NewTodoFragment"
         android:label="NewTodoFragment"
         tools:layout="@layout/todo_new_fragment"/>
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.amaro.todolist.presentation.view.fragment.SettingsFragment"
+        android:label="SettingsFragment"/>
 </navigation>

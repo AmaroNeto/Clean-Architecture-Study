@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <SwitchPreferenceCompat
+        app:key="@string/day_night_key"
+        app:title="@string/day_night_title"
+        app:defaultValue="false"/>
+</PreferenceScreen>
