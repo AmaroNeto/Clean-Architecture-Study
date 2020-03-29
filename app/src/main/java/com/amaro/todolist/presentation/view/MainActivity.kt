@@ -1,14 +1,17 @@
 package com.amaro.todolist.presentation.view
 
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.ActionBar
 import androidx.lifecycle.Observer
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.bundleOf
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import androidx.preference.PreferenceManager
 import com.amaro.todolist.R
 import com.amaro.todolist.domain.log.Logger
 import com.amaro.todolist.presentation.model.TodoModel
@@ -42,6 +45,7 @@ class MainActivity : AppCompatActivity(), TodoListFragment.OnItemClickListener {
         setUpActionBar()
         setUpObserver()
         setUpTwoPanelConfig(savedInstanceState)
+        setUpDarkMode()
     }
 
     private fun setUpObserver() {
@@ -121,13 +125,14 @@ class MainActivity : AppCompatActivity(), TodoListFragment.OnItemClickListener {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.todo_list_menu, menu);
+        menuInflater.inflate(R.menu.todo_list_menu, menu)
         return true;
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when(item?.itemId) {
             R.id.action_settings ->  {
+                toolbarTitle.text = getString(R.string.settings_title)
                 navControler
                     .navigate(R.id.action_todoListFragment_to_settingsFragment)
                 return true
@@ -135,6 +140,14 @@ class MainActivity : AppCompatActivity(), TodoListFragment.OnItemClickListener {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private fun setUpDarkMode() {
+        val sharePreference = PreferenceManager.getDefaultSharedPreferences(this)
+        val darkModeEnabled = sharePreference.getBoolean(getString(R.string.day_night_key), false)
+        if(darkModeEnabled) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        }
     }
 
 }
