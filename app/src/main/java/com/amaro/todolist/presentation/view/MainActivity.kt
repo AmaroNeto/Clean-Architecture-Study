@@ -132,7 +132,6 @@ class MainActivity : AppCompatActivity(), TodoListFragment.OnItemClickListener {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when(item?.itemId) {
             R.id.action_settings ->  {
-                toolbarTitle.text = getString(R.string.settings_title)
                 navControler
                     .navigate(R.id.action_todoListFragment_to_settingsFragment)
                 return true

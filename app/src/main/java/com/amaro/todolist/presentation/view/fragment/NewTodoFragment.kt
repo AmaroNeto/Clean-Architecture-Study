@@ -26,8 +26,8 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class NewTodoFragment : Fragment() {
 
-    val mLogger: Logger by inject()
-    val vm : NewTodoViewModel by viewModel()
+    private val mLogger: Logger by inject()
+    private val vm : NewTodoViewModel by viewModel()
 
     private lateinit var saveButton: Button
     private lateinit var titleTli: TextInputLayout
@@ -64,7 +64,7 @@ class NewTodoFragment : Fragment() {
 
     private fun setSaveButton() {
         saveButton.setOnClickListener {
-            Log.v(TAG, "save button clicked")
+            mLogger.v(TAG, "save button clicked")
             if (shouldSave()) {
                 vm.create(getTodoModel())
             } else {
@@ -82,7 +82,7 @@ class NewTodoFragment : Fragment() {
                 hideLoading()
             }
             Status.ERROR -> {
-                Log.e(TAG, "Process response error ${response.error}")
+                mLogger.e(TAG, "Process response error ${response.error}")
                 hideLoading()
                 // TODO handle error
             }
@@ -91,7 +91,7 @@ class NewTodoFragment : Fragment() {
 
     private fun renderResponse(response: Response) {
         val todoModelId = response.data as Long
-        Log.v(TAG, "todo id created: $todoModelId")
+        mLogger.v(TAG, "todo id created: $todoModelId")
         if (todoModelId != 0L) {
             view?.findNavController()?.popBackStack()
             Toast.makeText(activity, R.string.todo_created, Toast.LENGTH_SHORT).show()

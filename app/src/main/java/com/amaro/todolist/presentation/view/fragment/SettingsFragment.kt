@@ -1,6 +1,8 @@
 package com.amaro.todolist.presentation.view.fragment
 
 import android.os.Bundle
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
@@ -17,17 +19,27 @@ class SettingsFragment : PreferenceFragmentCompat() {
         setPreferencesFromResource(R.xml.preferences, rootKey)
 
         dayNightSwitch = findPreference(getString(R.string.day_night_key))
+        setUpActionBar()
         setUpDarkModeSwitch()
     }
 
     private fun setUpDarkModeSwitch() {
-        dayNightSwitch?.summaryOn = getString(R.string.enabled)
-        dayNightSwitch?.summaryOff = getString(R.string.disabled)
-        dayNightSwitch?.setOnPreferenceChangeListener { _, newValue ->
-            mLogger.i(TAG, "darkMode enable: $newValue")
-            enableDarkMode(newValue as Boolean)
-            true
+        dayNightSwitch?.apply {
+            summaryOn = getString(R.string.enabled)
+            summaryOff = getString(R.string.disabled)
+            setOnPreferenceChangeListener { _, newValue ->
+                mLogger.i(TAG, "darkMode enable: $newValue")
+                enableDarkMode(newValue as Boolean)
+                true
+            }
         }
+    }
+
+    private fun setUpActionBar() {
+        val actionBar = (activity as AppCompatActivity?)?.supportActionBar
+        val toolbar = actionBar?.customView
+        val toolbarTitle = toolbar?.findViewById<TextView>(R.id.toolbarTitle)
+        toolbarTitle?.text = getString(R.string.settings_title)
     }
 
     private fun enableDarkMode(enable: Boolean) {
