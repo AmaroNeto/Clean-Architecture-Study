@@ -11,4 +11,7 @@
         <item name="android:textColorSecondary">@color/colorAccent</item>
     </style>
 
+    <style name="AppTheme.Fullscreen" parent="Theme.MaterialComponents.NoActionBar">
+        <item name="android:windowFullscreen">true</item>
+    </style>
 </resources>

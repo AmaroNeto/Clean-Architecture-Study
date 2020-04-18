@@ -45,7 +45,6 @@ class MainActivity : AppCompatActivity(), TodoListFragment.OnItemClickListener {
         setUpActionBar()
         setUpObserver()
         setUpTwoPanelConfig(savedInstanceState)
-        setUpDarkMode()
     }
 
     private fun setUpObserver() {
@@ -140,13 +139,4 @@ class MainActivity : AppCompatActivity(), TodoListFragment.OnItemClickListener {
 
         return super.onOptionsItemSelected(item);
     }
-
-    private fun setUpDarkMode() {
-        val sharePreference = PreferenceManager.getDefaultSharedPreferences(this)
-        val darkModeEnabled = sharePreference.getBoolean(getString(R.string.day_night_key), false)
-        if(darkModeEnabled) {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-        }
-    }
-
 }
